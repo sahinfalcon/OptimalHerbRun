@@ -24,11 +24,18 @@ class OptimalHerbRunOverlay extends OverlayPanel
     @Override
     public Dimension render(Graphics2D graphics)
     {
-        // Add a simple test line to verify overlay works
         panelComponent.getChildren().add(
                 LineComponent.builder()
                         .left("Herb Run:")
                         .right("Active")
+                        .build()
+        );
+
+        // Add patch count
+        panelComponent.getChildren().add(
+                LineComponent.builder()
+                        .left("Patches Found:")
+                        .right(String.valueOf(plugin.getPatches().size()))
                         .build()
         );
 
