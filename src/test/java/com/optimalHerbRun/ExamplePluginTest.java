@@ -1,4 +1,4 @@
-package com.herbrun;
+package com.optimalHerbRun;
 
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
