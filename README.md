@@ -1,6 +1,6 @@
 # OptimalHerbRun
 
-A RuneLite plugin in development that aims to optimize herb farming runs through patch tracking, route optimization, and profit calculations.
+A RuneLite plugin in development that aims to optimise herb farming runs through patch tracking, route optimisation, and profit calculations.
 
 ## Planned Features
 
@@ -10,7 +10,7 @@ A RuneLite plugin in development that aims to optimize herb farming runs through
 - Visual map indicators
 - Time-until-harvest tracking
 
-### Route Optimization
+### Route Optimisation
 - Efficient path suggestions based on available teleports
 - Time estimates for run completion
 - Inventory-aware routing
@@ -48,7 +48,7 @@ A: The plugin will integrate with RuneLite's GE pricing data, updating regularly
 - Teleport expenses
 
 **Q: What about disease-free patches?**  
-A: The plugin will recognize special patches (like the Farming Guild's) and adjust its protection recommendations accordingly.
+A: The plugin will recognise special patches (like the Farming Guild's) and adjust its protection recommendations accordingly.
 
 ## Development
 
