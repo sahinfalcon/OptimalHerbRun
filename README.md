@@ -1,7 +1,5 @@
 # OptimalHerbRun
 
-![License](https://img.shields.io/github/license/sahinfalcon/OptimalHerbRun)
-
 A RuneLite plugin in development that aims to optimize herb farming runs through patch tracking, route optimization, and profit calculations.
 
 ## Planned Features
