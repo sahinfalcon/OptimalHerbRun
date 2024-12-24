@@ -20,16 +20,19 @@ public class OptimalHerbRunPlugin extends Plugin
 	@Inject
 	private OverlayManager overlayManager;
 
+	@Inject
+	private OptimalHerbRunOverlay overlay;
+
 	@Override
 	protected void startUp()
 	{
-		// Plugin startup logic
+		overlayManager.add(overlay);
 	}
 
 	@Override
 	protected void shutDown()
 	{
-		// Plugin shutdown logic
+		overlayManager.remove(overlay);
 	}
 
 	@Provides
@@ -38,4 +41,3 @@ public class OptimalHerbRunPlugin extends Plugin
 		return configManager.getConfig(OptimalHerbRunConfig.class);
 	}
 }
-
