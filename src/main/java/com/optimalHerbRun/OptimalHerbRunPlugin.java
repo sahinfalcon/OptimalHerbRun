@@ -5,8 +5,10 @@ import javax.inject.Inject;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Client;
 import net.runelite.api.GameObject;
 import net.runelite.api.events.GameObjectSpawned;
+import net.runelite.api.events.VarbitChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -28,6 +30,9 @@ import java.util.Set;
 )
 public class OptimalHerbRunPlugin extends Plugin
 {
+	@Inject
+	private Client client;
+
 	@Inject
 	private OptimalHerbRunConfig config;
 
@@ -80,6 +85,47 @@ public class OptimalHerbRunPlugin extends Plugin
 			log.info("Found herb patch at: {}", location);
 		}
 	}
+
+	@Subscribe
+	public void onVarbitChanged(VarbitChanged event)
+	{
+		int varbitId = event.getVarbitId();
+		if (varbitId == 4774) {
+			int value = event.getValue();
+			String stage;
+			switch (value) {
+				case 3:
+					stage = "Empty";
+					break;
+				case 4:
+					stage = "Stage 1";
+					break;
+				case 5:
+					stage = "Stage 2";
+					break;
+				case 6:
+					stage = "Stage 3";
+					break;
+				case 7:
+					stage = "Stage 4";
+					break;
+				case 8:
+					stage = "Ready";
+					break;
+				case 9:
+				case 10:
+					stage = "Harvesting";
+					break;
+				default:
+					stage = "Unknown";
+			}
+
+			WorldPoint playerLocation = client.getLocalPlayer().getWorldLocation();
+			log.info("Herb patch at {} is now in {}", playerLocation, stage);
+		}
+	}
+
+
 
 	@Provides
 	OptimalHerbRunConfig provideConfig(ConfigManager configManager)
