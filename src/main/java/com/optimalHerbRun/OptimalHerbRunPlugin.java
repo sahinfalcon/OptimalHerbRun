@@ -121,7 +121,7 @@ public class OptimalHerbRunPlugin extends Plugin
 			}
 
 			WorldPoint playerLocation = client.getLocalPlayer().getWorldLocation();
-			log.info("Herb patch at {} is now in {}", playerLocation, stage);
+			log.info("Herb patch at {} is now in {} as the varbit is now: {}", playerLocation, stage, value);
 		}
 	}
 
