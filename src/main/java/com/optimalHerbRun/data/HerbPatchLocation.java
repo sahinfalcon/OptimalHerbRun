@@ -1,6 +1,9 @@
 package com.optimalHerbRun.data;
 
 import lombok.Getter;
+import net.runelite.api.Client;
+import net.runelite.api.Skill;
+import net.runelite.api.Varbits;
 import net.runelite.api.coords.WorldPoint;
 import java.util.Arrays;
 
@@ -23,6 +26,26 @@ public enum HerbPatchLocation {
         this.objectId = objectId;
         this.location = location;
         this.name = name;
+    }
+
+    public static HerbPatchLocation getForLocation(WorldPoint point) {
+        return Arrays.stream(values())
+                .filter(loc -> loc.getLocation().equals(point))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public boolean isDiseaseFree(Client client) {
+        switch (this) {
+            case FARMING_GUILD:
+                // Patches in the Farming Guild are disease free at 85+ farming
+                return client.getBoostedSkillLevel(Skill.FARMING) >= 85;
+            case HOSIDIUS:
+                // Disease free with Kourend easy diary
+                return client.getVarbitValue(Varbits.DIARY_KOUREND_EASY) == 1;
+            default:
+                return false;
+        }
     }
 
     public static String getNameForLocation(WorldPoint point) {
