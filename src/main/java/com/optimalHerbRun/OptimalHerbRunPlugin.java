@@ -116,6 +116,9 @@ public class OptimalHerbRunPlugin extends Plugin
 				case 10:
 					stage = "Harvesting";
 					break;
+				case 170:
+					stage = "Dead from disease";
+					break;
 				default:
 					stage = "Unknown";
 			}
