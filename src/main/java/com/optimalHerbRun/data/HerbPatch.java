@@ -17,6 +17,10 @@ public class HerbPatch {
         switch (value) {
             case 0:
                 return; // Ignore 0 value
+            case 1:
+            case 2:
+                setGrowthStage("Weeds");
+                break;
             case 3:
                 setGrowthStage("Empty");
                 break;
