@@ -12,6 +12,7 @@ public class HerbPatch {
     private Instant plantTime;
     private HerbType type;
     private boolean isDiseased;
+    private String growthStage = "Empty";
 
     public void setDiseased(boolean diseased){
         this.isDiseased = diseased;

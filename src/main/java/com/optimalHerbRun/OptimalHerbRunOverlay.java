@@ -1,5 +1,6 @@
 package com.optimalHerbRun;
 
+import com.optimalHerbRun.data.HerbPatch;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
@@ -69,14 +70,14 @@ class OptimalHerbRunOverlay extends OverlayPanel
         );
 
         // List each found patch
-        for (WorldPoint location : plugin.getPatches().keySet())
-        {
+        for (WorldPoint location : plugin.getPatches().keySet()) {
+            HerbPatch patch = plugin.getPatches().get(location);
             String patchName = getPatchName(location);
             panelComponent.getChildren().add(
                     LineComponent.builder()
                             .left(patchName)
-                            .right("Found")
-                            .rightColor(Color.YELLOW)
+                            .right(patch.getGrowthStage())  // Show growth stage
+                            .rightColor(patch.getGrowthStage().equals("Ready") ? Color.GREEN : Color.WHITE)
                             .build()
             );
         }
