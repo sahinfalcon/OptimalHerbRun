@@ -11,6 +11,7 @@ public enum HerbType {
     AVANTOE,
     KWUARM,
     SNAPDRAGON,
+    HUASCA,
     CADANTINE,
     LANTADYME,
     DWARF_WEED,
