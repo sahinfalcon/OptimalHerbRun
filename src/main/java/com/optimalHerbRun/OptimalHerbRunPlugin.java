@@ -42,6 +42,8 @@ public class OptimalHerbRunPlugin extends Plugin
 	@Inject
 	private OptimalHerbRunOverlay overlay;
 
+	private WorldPoint currentPatchLocation = null;
+
 	private static final Set<Integer> HERB_PATCH_IDS = Set.of(
 			8150,  // Falador patch
 			8151,  // Ardougne patch
@@ -72,28 +74,29 @@ public class OptimalHerbRunPlugin extends Plugin
 	}
 
 	@Subscribe
-	public void onGameObjectSpawned(GameObjectSpawned event)
-	{
+	public void onGameObjectSpawned(GameObjectSpawned event) {
 		GameObject gameObject = event.getGameObject();
-
-		// Check if the spawned object is a herb patch
-		if (HERB_PATCH_IDS.contains(gameObject.getId()))
-		{
+		if (HERB_PATCH_IDS.contains(gameObject.getId())) {
 			WorldPoint location = gameObject.getWorldLocation();
-			HerbPatch patch = new HerbPatch(location);
-			patches.put(location, patch);
+			if (!patches.containsKey(location)) {
+				patches.put(location, new HerbPatch(location));
+			}
+			currentPatchLocation = location;  // Update current patch when detected
 			log.info("Found herb patch at: {}", location);
 		}
 	}
 
+
 	@Subscribe
-	public void onVarbitChanged(VarbitChanged event)
-	{
+	public void onVarbitChanged(VarbitChanged event) {
 		int varbitId = event.getVarbitId();
-		if (varbitId == 4774) {
+		if (varbitId == 4774 && currentPatchLocation != null) {
 			int value = event.getValue();
 			String stage;
 			switch (value) {
+				case 0:
+					// Ignore 0 value as it's when we're out of range
+					return;
 				case 3:
 					stage = "Empty";
 					break;
@@ -117,14 +120,19 @@ public class OptimalHerbRunPlugin extends Plugin
 					stage = "Harvesting";
 					break;
 				case 170:
-					stage = "Dead from disease";
+					stage = "Dead";
 					break;
 				default:
 					stage = "Unknown";
 			}
 
-			WorldPoint playerLocation = client.getLocalPlayer().getWorldLocation();
-			log.info("Herb patch at {} is now in {} as the varbit is now: {}", playerLocation, stage, value);
+			// Only update current patch viewed
+			HerbPatch patch = patches.get(currentPatchLocation);
+			if (patch != null) {
+				patch.setGrowthStage(stage);
+				log.info("Updated growth stage for patch at {} to {} as value is now {}",
+						currentPatchLocation, stage, value);
+			}
 		}
 	}
 
