@@ -3,6 +3,8 @@ package com.optimalHerbRun.data;
 import lombok.Data;
 import net.runelite.api.Client;
 import net.runelite.api.coords.WorldPoint;
+
+import java.time.Duration;
 import java.time.Instant;
 
 @Data
@@ -10,10 +12,13 @@ public class HerbPatch {
     private final WorldPoint location;
     private String growthStage = "Unknown";
     private boolean isDiseased;
-    private Instant plantTime;
+    private Instant plantedTime;
     private boolean isProtected;
+    private static final Duration GROWTH_TIME = Duration.ofMinutes(20);
+
 
     public void updateState(int value) {
+        String oldStage = growthStage;
         switch (value) {
             case 0:
                 return; // Ignore 0 value
@@ -26,6 +31,9 @@ public class HerbPatch {
                 break;
             case 4:
                 setGrowthStage("Stage 1");
+                if (!oldStage.equals("Stage 1")){
+                    plantedTime = Instant.now();
+                }
                 break;
             case 5:
                 setGrowthStage("Stage 2");
@@ -61,5 +69,11 @@ public class HerbPatch {
 
     public String getLocationName() {
         return HerbPatchLocation.getNameForLocation(location);
+    }
+
+    public String getTimeElapsed(){
+        if (plantedTime == null) return "";
+        long minutes = Duration.between(plantedTime, Instant.now()).toMinutes();
+        return minutes + " mins";
     }
 }
