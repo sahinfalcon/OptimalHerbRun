@@ -19,7 +19,7 @@ public class HerbPatch {
                 return; // Ignore 0 value
             case 1:
             case 2:
-                setGrowthStage("Weeds");
+                setGrowthStage("Raking");
                 break;
             case 3:
                 setGrowthStage("Empty");
