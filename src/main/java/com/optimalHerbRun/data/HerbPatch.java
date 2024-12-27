@@ -51,6 +51,7 @@ public class HerbPatch {
             case 10:
                 setGrowthStage("Harvesting");
                 break;
+            case 129:
             case 170:
             case 171:
             case 172:
