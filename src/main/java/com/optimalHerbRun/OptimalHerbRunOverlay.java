@@ -5,12 +5,10 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.api.coords.WorldPoint;
 import com.optimalHerbRun.data.HerbPatch;
-import com.optimalHerbRun.data.HerbPatchLocation;
 import javax.inject.Inject;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Color;
-import java.util.Map;
 
 class OptimalHerbRunOverlay extends OverlayPanel
 {
@@ -37,20 +35,7 @@ class OptimalHerbRunOverlay extends OverlayPanel
                         .build()
         );
 
-        // Show total patches found
-        panelComponent.getChildren().add(
-                LineComponent.builder()
-                        .left("Patches Found:")
-                        .right(String.valueOf(plugin.getPatches().size()))
-                        .build()
-        );
-
-        // List each found patch with its state
-        for (Map.Entry<WorldPoint, HerbPatch> entry : plugin.getPatches().entrySet()) {
-            WorldPoint location = entry.getKey();
-            HerbPatch patch = entry.getValue();
-            String patchName = HerbPatchLocation.getNameForLocation(location);
-
+        for (HerbPatch patch : plugin.getPatches().values()) {
             Color stateColor = Color.WHITE;
             if ("Ready".equals(patch.getGrowthStage())) {
                 stateColor = Color.GREEN;
@@ -58,13 +43,24 @@ class OptimalHerbRunOverlay extends OverlayPanel
                 stateColor = Color.RED;
             }
 
+            // Patch name and state
             panelComponent.getChildren().add(
                     LineComponent.builder()
-                            .left(patchName)
+                            .left(patch.getLocationName())
                             .right(patch.getGrowthStage())
                             .rightColor(stateColor)
                             .build()
             );
+
+            // Only show time for growing patches
+            if (patch.getGrowthStage().startsWith("Stage")) {
+                panelComponent.getChildren().add(
+                        LineComponent.builder()
+                                .left("↳ Time:")
+                                .right(patch.getTimeElapsed())
+                                .build()
+                );
+            }
         }
 
         return super.render(graphics);
