@@ -56,8 +56,8 @@ class OptimalHerbRunOverlay extends OverlayPanel
             if (patch.getGrowthStage().startsWith("Stage")) {
                 panelComponent.getChildren().add(
                         LineComponent.builder()
-                                .left("Time:")
-                                .right(patch.getTimeElapsed())
+                                .left("  - " + patch.getTimeElapsed())
+                                .right(patch.getStageEstimate())
                                 .build()
                 );
             }

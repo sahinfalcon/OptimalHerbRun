@@ -73,8 +73,15 @@ public class HerbPatch {
     }
 
     public String getTimeElapsed(){
-        if (plantedTime == null) return "";
+        if (plantedTime == null) return "Time Unknown";
         long minutes = Duration.between(plantedTime, Instant.now()).toMinutes();
         return minutes + " mins";
+    }
+
+    public String getStageEstimate() {
+        if (plantedTime == null) return "";
+        long mins = Duration.between(plantedTime, Instant.now()).toMinutes();
+        long nextStage = 20 - (mins % 20);
+        return "~" + nextStage + "m";
     }
 }
