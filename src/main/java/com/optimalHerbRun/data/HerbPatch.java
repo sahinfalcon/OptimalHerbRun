@@ -14,7 +14,7 @@ public class HerbPatch {
     private boolean isDiseased;
     private Instant plantedTime;
     private boolean isProtected;
-    private static final Duration GROWTH_TIME = Duration.ofMinutes(20);
+    private static final Duration GROWTH_TIME = Duration.ofMinutes(16);
 
 
     public void updateState(int value) {
