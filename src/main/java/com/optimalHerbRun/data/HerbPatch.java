@@ -81,7 +81,7 @@ public class HerbPatch {
     public String getStageEstimate() {
         if (plantedTime == null) return "";
         long mins = Duration.between(plantedTime, Instant.now()).toMinutes();
-        long nextStage = 20 - (mins % 20);
+        long nextStage = 16 - (mins % 16);
         return "~" + nextStage + "m";
     }
 }
