@@ -100,7 +100,7 @@ public class OptimalHerbRunPlugin extends Plugin
                     patch.updateState(event.getValue());
                     log.info("Updated state for {} patch: {}",
                             patch.getLocationName(),
-                            patch.getGrowthStage());
+                            patch.getDisplayState());
                 }
             }
         }
@@ -127,7 +127,7 @@ public class OptimalHerbRunPlugin extends Plugin
                 patch.updateState(value);
                 log.info("Checking {} patch, Current state: {} due to value: {}",
                         patch.getLocationName(),
-                        patch.getGrowthStage(),
+                        patch.getDisplayState(),
                         value);
             }
         }
