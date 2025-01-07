@@ -8,11 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameObject;
 import net.runelite.api.GameState;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.VarbitChanged;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -27,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 @Slf4j
 @PluginDescriptor(
@@ -51,7 +54,11 @@ public class OptimalHerbRunPlugin extends Plugin
     @Inject
     private OptimalHerbRunOverlay overlay;
 
-    // Convert enum to Set of IDs
+    // Pattern for detecting compost application
+    private static final Pattern COMPOST_USED_ON_PATCH = Pattern.compile(
+            "You treat the .+ with (?<compostType>ultra|super|)compost\\.");
+
+    // Store all herb patch IDs we want to track
     private static final Set<Integer> HERB_PATCH_IDS = Arrays.stream(HerbPatchLocation.values())
             .map(HerbPatchLocation::getObjectId)
             .collect(Collectors.toSet());
@@ -109,13 +116,43 @@ public class OptimalHerbRunPlugin extends Plugin
     @Subscribe
     public void onGameStateChanged(GameStateChanged event) {
         if (event.getGameState() == GameState.LOGGED_IN) {
-            clientThread.invokeLater(() -> checkNearbyPatchStates());
+            clientThread.invokeLater(this::checkNearbyPatchStates);
         }
     }
 
     @Subscribe
     public void onGameTick(GameTick tick) {
         checkNearbyPatchStates();
+    }
+
+    @Subscribe
+    public void onChatMessage(ChatMessage message) {
+        if (message.getType() != ChatMessageType.SPAM && message.getType() != ChatMessageType.GAMEMESSAGE) {
+            return;
+        }
+
+        String messageString = message.getMessage();
+        if (COMPOST_USED_ON_PATCH.matcher(messageString).matches()) {
+            WorldPoint playerLocation = client.getLocalPlayer().getWorldLocation();
+            HerbPatch nearestPatch = getNearestPatch(playerLocation);
+
+            if (nearestPatch != null) {
+                nearestPatch.setProtected(true);
+                log.info("Applied compost to {} patch", nearestPatch.getLocationName());
+            }
+        }
+    }
+
+    private HerbPatch getNearestPatch(WorldPoint playerLocation) {
+        return patches.entrySet().stream()
+                .filter(e -> e.getKey().distanceTo(playerLocation) < 10)
+                .min((e1, e2) ->
+                        Integer.compare(
+                                e1.getKey().distanceTo(playerLocation),
+                                e2.getKey().distanceTo(playerLocation)
+                        ))
+                .map(Map.Entry::getValue)
+                .orElse(null);
     }
 
     private void checkNearbyPatchStates() {
