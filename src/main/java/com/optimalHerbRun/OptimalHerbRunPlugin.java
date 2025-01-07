@@ -58,6 +58,10 @@ public class OptimalHerbRunPlugin extends Plugin
     private static final Pattern COMPOST_USED_ON_PATCH = Pattern.compile(
             "You treat the .+ with (?<compostType>ultra|super|)compost\\.");
 
+
+    private static final Pattern INSPECT_PATCH = Pattern.compile(
+            "This is an? .+\\. The soil has been treated with (?<compostType>ultra|super|)compost\\..*");
+
     // Store all herb patch IDs we want to track
     private static final Set<Integer> HERB_PATCH_IDS = Arrays.stream(HerbPatchLocation.values())
             .map(HerbPatchLocation::getObjectId)
@@ -132,13 +136,15 @@ public class OptimalHerbRunPlugin extends Plugin
         }
 
         String messageString = message.getMessage();
-        if (COMPOST_USED_ON_PATCH.matcher(messageString).matches()) {
+        if (COMPOST_USED_ON_PATCH.matcher(messageString).matches() ||
+                INSPECT_PATCH.matcher(messageString).matches())
+        {
             WorldPoint playerLocation = client.getLocalPlayer().getWorldLocation();
             HerbPatch nearestPatch = getNearestPatch(playerLocation);
 
             if (nearestPatch != null) {
                 nearestPatch.setProtected(true);
-                log.info("Applied compost to {} patch", nearestPatch.getLocationName());
+                log.info("Detected compost on {} patch", nearestPatch.getLocationName());
             }
         }
     }
