@@ -3,6 +3,7 @@ package com.optimalHerbRun;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 
+import com.optimalHerbRun.data.HerbType;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -53,6 +54,11 @@ public class OptimalHerbRunPlugin extends Plugin
 
     @Inject
     private OptimalHerbRunOverlay overlay;
+
+    private static final Pattern INSPECT_HERB_TYPE = Pattern.compile(
+            ".*The patch has (.*?) leaf growing in it and is at state.*");
+    private static final Pattern HERB_PLANTED = Pattern.compile(
+            "You plant (?<herbType>.*) seed in the herb patch\\.");
 
     // Pattern for detecting compost application
     private static final Pattern COMPOST_USED_ON_PATCH = Pattern.compile(
@@ -136,15 +142,42 @@ public class OptimalHerbRunPlugin extends Plugin
         }
 
         String messageString = message.getMessage();
+        WorldPoint playerLocation = client.getLocalPlayer().getWorldLocation();
+        HerbPatch nearestPatch = getNearestPatch(playerLocation);
+
+        if (nearestPatch == null) {
+            return;
+        }
+
+        // Check for compost application/inspection
         if (COMPOST_USED_ON_PATCH.matcher(messageString).matches() ||
                 INSPECT_PATCH.matcher(messageString).matches())
         {
-            WorldPoint playerLocation = client.getLocalPlayer().getWorldLocation();
-            HerbPatch nearestPatch = getNearestPatch(playerLocation);
+            nearestPatch.setProtected(true);
+            log.info("Detected compost on {} patch", nearestPatch.getLocationName());
+        }
 
-            if (nearestPatch != null) {
-                nearestPatch.setProtected(true);
-                log.info("Detected compost on {} patch", nearestPatch.getLocationName());
+        // Check for herb planting
+        var herbPlanted = HERB_PLANTED.matcher(messageString);
+        if (herbPlanted.matches()) {
+            String herbName = herbPlanted.group("herbType");
+            try {
+                nearestPatch.setHerbType(HerbType.valueOf(herbName.toUpperCase().replace(" ", "_")));
+                log.info("Planted {} in {} patch", herbName, nearestPatch.getLocationName());
+            } catch (IllegalArgumentException e) {
+                log.warn("Unknown herb type: {}", herbName);
+            }
+        }
+
+        // Check for herb type from inspection
+        var inspectHerb = INSPECT_HERB_TYPE.matcher(messageString);
+        if (inspectHerb.matches()) {
+            String herbName = inspectHerb.group(1);  // Gets "Guam" from "Guam leaf"
+            try {
+                nearestPatch.setHerbType(HerbType.valueOf(herbName.toUpperCase()));
+                log.info("Found {} in {} patch from inspection", herbName, nearestPatch.getLocationName());
+            } catch (IllegalArgumentException e) {
+                log.warn("Unknown herb type from inspection: {}", herbName);
             }
         }
     }

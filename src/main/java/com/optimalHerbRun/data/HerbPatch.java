@@ -11,6 +11,7 @@ public class HerbPatch {
     private boolean isProtected;
     private int currentStage;
     private static final int TOTAL_STAGES = 5;
+    private HerbType herbType;
 
     public String getDisplayState() {
         switch (currentStage) {
@@ -26,9 +27,10 @@ public class HerbPatch {
             case 6:
             case 7:
                 int growthStage = currentStage - 3;
-                return String.format("Growing (%d/%d)", growthStage, TOTAL_STAGES);
+                String herbName = herbType != null ? herbType.getName() : "Herb";
+                return String.format("%s (%d/5)", herbName, growthStage);
             case 8:
-                return "READY";
+                return herbType != null ? herbType.getName() + " READY" : "READY";
             case 9:
             case 10:
                 return "Harvesting";
