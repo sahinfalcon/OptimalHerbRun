@@ -58,7 +58,7 @@ public class OptimalHerbRunPlugin extends Plugin
     private static final Pattern INSPECT_HERB_TYPE = Pattern.compile(
             ".*The patch has (.*?) leaf growing in it and is at state.*");
     private static final Pattern HERB_PLANTED = Pattern.compile(
-            "You plant (?<herbType>.*) seed in the herb patch\\.");
+            "You plant (?:a |an )?(?<herbType>.*?) seed in the herb patch\\.");
 
     // Pattern for detecting compost application
     private static final Pattern COMPOST_USED_ON_PATCH = Pattern.compile(

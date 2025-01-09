@@ -1,21 +1,26 @@
 package com.optimalHerbRun.data;
 
+import com.optimalHerbRun.OptimalHerbRunConfig;
 import lombok.Getter;
 
 import java.awt.Color;
 
 @Getter
 public enum PatchStatus {
-    READY(Color.GREEN),
-    PROTECTED(Color.CYAN),
-    UNPROTECTED(Color.ORANGE),
-    DEAD(Color.RED),
-    NORMAL(Color.WHITE);
+    READY,
+    GROWING,
+    DEAD,
+    PROTECTED,
+    UNPROTECTED,
+    EMPTY,
+    NORMAL;
 
-    private final Color color;
-
-    PatchStatus(Color color) {
-        this.color = color;
+    public Color getColor(OptimalHerbRunConfig config) {
+        switch (this) {
+            case READY: return config.readyColor();
+            case DEAD: return config.deadColor();
+            case GROWING: return config.growingColor();
+            default: return Color.WHITE;
+        }
     }
-
 }

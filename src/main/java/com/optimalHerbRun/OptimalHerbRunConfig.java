@@ -1,8 +1,8 @@
 package com.optimalHerbRun;
 
-import net.runelite.client.config.Config;
-import net.runelite.client.config.ConfigGroup;
-import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.*;
+
+import java.awt.Color;
 
 @ConfigGroup("optimalHerbRun")
 public interface OptimalHerbRunConfig extends Config
@@ -27,5 +27,44 @@ public interface OptimalHerbRunConfig extends Config
 	default int profitThreshold()
 	{
 		return 50;
+	}
+	@ConfigSection(
+			name = "Colors",
+			description = "Configure colors for different patch states",
+			position = 0
+	)
+	String colorsSection = "colors";
+
+	@Alpha
+	@ConfigItem(
+			keyName = "readyColor",
+			name = "Ready Color",
+			description = "Color for patches ready to harvest",
+			section = colorsSection
+	)
+	default Color readyColor() {
+		return Color.GREEN;
+	}
+
+	@Alpha
+	@ConfigItem(
+			keyName = "growingColor",
+			name = "Growing Color",
+			description = "Color for growing patches",
+			section = colorsSection
+	)
+	default Color growingColor() {
+		return Color.WHITE;
+	}
+
+	@Alpha
+	@ConfigItem(
+			keyName = "deadColor",
+			name = "Dead Color",
+			description = "Color for dead patches",
+			section = colorsSection
+	)
+	default Color deadColor() {
+		return Color.RED;
 	}
 }

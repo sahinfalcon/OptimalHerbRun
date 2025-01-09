@@ -31,23 +31,20 @@ class OptimalHerbRunOverlay extends OverlayPanel {
                 LineComponent.builder()
                         .left("Herb Run:")
                         .right("Active")
-                        .rightColor(Color.GREEN)
+                        .rightColor(config.growingColor())
                         .build()
         );
 
         for (HerbPatch patch : plugin.getPatches().values()) {
-            // Get base display text
             String displayText = patch.getDisplayState();
 
-            // Add compost warning if needed
             if (patch.getDisplayState().contains("Growing") &&
                     !patch.isProtected() &&
                     !patch.isDiseaseFree(client)) {
                 displayText += " (needs compost)";
             }
 
-            // Get appropriate color for state
-            Color stateColor = patch.getStatus().getColor();
+            Color stateColor = patch.getStatus().getColor(config);
 
             panelComponent.getChildren().add(
                     LineComponent.builder()
