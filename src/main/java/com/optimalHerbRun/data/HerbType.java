@@ -1,5 +1,8 @@
 package com.optimalHerbRun.data;
 
+import lombok.Getter;
+
+@Getter
 public enum HerbType {
     GUAM("Guam"),
     MARRENTILL("Marrentill"),
@@ -22,7 +25,4 @@ public enum HerbType {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
 }

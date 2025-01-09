@@ -4,6 +4,7 @@ import net.runelite.client.config.*;
 
 import java.awt.Color;
 
+@SuppressWarnings("SameReturnValue")
 @ConfigGroup("optimalHerbRun")
 public interface OptimalHerbRunConfig extends Config
 {
@@ -46,6 +47,7 @@ public interface OptimalHerbRunConfig extends Config
 		return Color.GREEN;
 	}
 
+	@SuppressWarnings("SameReturnValue")
 	@Alpha
 	@ConfigItem(
 			keyName = "growingColor",
