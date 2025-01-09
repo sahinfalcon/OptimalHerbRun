@@ -16,12 +16,11 @@ public class HerbPatch {
     public String getDisplayState() {
         switch (currentStage) {
             case 0:
+            case 3:
                 return "Empty";
             case 1:
             case 2:
                 return "Weeds";
-            case 3:
-                return "Empty";
             case 4:
             case 5:
             case 6:
